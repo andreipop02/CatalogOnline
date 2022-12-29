@@ -9,7 +9,7 @@ const renderRouter = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<MainScreen />} />
-        <Route path="/elev/:nrMatricol" element={<StudentScreen />} />
+        <Route path="/elev" element={<StudentScreen />} />
       </Routes>
     </BrowserRouter>
   );

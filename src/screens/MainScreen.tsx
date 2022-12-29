@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../App.module.scss";
+import { getStudents, setElev } from "../functions/firebase";
 
 const StudentsList = [
   {
@@ -28,33 +29,63 @@ const StudentsList = [
   },
 ];
 
+interface StudentsProps {
+  nume: string;
+  prenume: string;
+  CNP: string;
+  nrMatricol: string;
+  materii: object[];
+}
+
 const MainScreen = () => {
+  const [students, setStudents] = useState<StudentsProps[]>([]);
+
+  const getAllStudents = async () => {
+    const studentsArray = await getStudents();
+    setStudents(studentsArray);
+  };
+
+  useEffect(() => {
+    getAllStudents();
+  }, []);
   return (
     <div className="App">
       <table style={{ width: "100%" }}>
-        <tr>
-          <th style={{backgroundColor: "#15acda"}}>Nr. Crt</th>
-          <th style={{backgroundColor: "#15acda"}}>Nume</th>
-          <th style={{backgroundColor: "#15acda"}}>Prenume</th>
-          <th style={{backgroundColor: "#15acda"}}>CNP</th>
-          <th style={{backgroundColor: "#15acda"}}>Nr. Matricol</th>
-          <th style={{backgroundColor: "#15acda"}}></th>
+        <tr style={{ backgroundColor: "#15acda" }}>
+          <th>Nr. Crt</th>
+          <th>Nume</th>
+          <th>Prenume</th>
+          <th>CNP</th>
+          <th>Nr. Matricol</th>
+          <th></th>
         </tr>
-        {StudentsList.map((student, index) => {
+        {students.map((student, index) => {
           return (
             <tr>
-              <td>{index}</td>
+              <td>{index + 1}</td>
               <td>{student.nume}</td>
               <td>{student.prenume}</td>
               <td>{student.CNP}</td>
-              <td>{student.NrMatricol}</td>
-              <td onClick ={() => window.location.href = `/elev/${student.NrMatricol}`} style={{backgroundColor: "red", fontWeight: "bold", width: "150px", cursor: "pointer"}}>PAGINA ELEVULUI</td>
+              <td>{student.nrMatricol}</td>
+              <td
+                onClick={() =>
+                  (window.location.href = `/elev?${student.nrMatricol}`)
+                }
+                style={{
+                  backgroundColor: "red",
+                  fontWeight: "bold",
+                  width: "150px",
+                  cursor: "pointer",
+                }}
+              >
+                PAGINA ELEVULUI
+              </td>
             </tr>
           );
         })}
       </table>
     </div>
   );
-}
+};
 
 export default MainScreen;
