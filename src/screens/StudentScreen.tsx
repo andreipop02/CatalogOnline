@@ -1,96 +1,67 @@
-import React from "react";
+import { DocumentData } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import "../App.module.scss";
 import styles from "../App.module.scss";
 import AddModal from "../components/AddModal";
-
-const StudentGrades = [
-  {
-    Materie: "Limba Romana",
-    Note: [
-      { nota: 5, data: "19.06.2022" },
-      { nota: 3, data: "19.06.2022" },
-      { nota: 7, data: "19.06.2022" },
-      { nota: 10, data: "19.06.2022" },
-    ],
-    Medie: "nr",
-    Absente: ["19.06.2022, 20.06.2022"],
-  },
-  {
-    Materie: "Matematica",
-    Note: [
-      { nota: 5, data: "19.06.2022" },
-      { nota: 3, data: "19.06.2022" },
-      { nota: 7, data: "19.06.2022" },
-      { nota: 10, data: "19.06.2022" },
-    ],
-    Medie: "nr",
-    Absente: ["19.06.2022, 20.06.2022"],
-  },
-  {
-    Materie: "Engleza",
-    Note: [
-      { nota: 5, data: "19.06.2022" },
-      { nota: 3, data: "19.06.2022" },
-      { nota: 7, data: "19.06.2022" },
-      { nota: 10, data: "19.06.2022" },
-    ],
-    Medie: "nr",
-    Absente: ["19.06.2022, 20.06.2022"],
-  },
-  {
-    Materie: "Geografie",
-    Note: [
-      { nota: 5, data: "19.06.2022" },
-      { nota: 3, data: "19.06.2022" },
-      { nota: 7, data: "19.06.2022" },
-      { nota: 10, data: "19.06.2022" },
-    ],
-    Medie: "nr",
-    Absente: ["19.06.2022, 20.06.2022"],
-  },
-  {
-    Materie: "Informatica",
-    Note: [
-      { nota: 5, data: "19.06.2022" },
-      { nota: 3, data: "19.06.2022" },
-      { nota: 7, data: "19.06.2022" },
-      { nota: 10, data: "19.06.2022" },
-    ],
-    Medie: "nr",
-    Absente: ["19.06.2022, 20.06.2022"],
-  },
-];
+import { getStudentById } from "../functions/firebase";
+interface StudentsProps {
+  nume: string;
+  prenume: string;
+  CNP: string;
+  nrMatricol: string;
+  materii: object[];
+}
 
 const StudentScreen = () => {
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [student, setStudent] = useState<
+    StudentsProps | DocumentData | undefined
+  >();
+  const location = useLocation();
+  const documentId = location.search.substring(1);
+  
+  const getStudentData = async () => {
+    const studentData = await getStudentById(documentId);
+    if (studentData) setStudent(studentData);
+  };
+
+  useEffect(() => {
+    getStudentData();
+  }, []);
+
   return (
     <div>
+      <h1>
+        {student?.nume} {student?.prenume}
+      </h1>
       <table style={{ width: "100%" }}>
-        <tr>
-          <th style={{ backgroundColor: "#15acda" }}>Nr. Crt</th>
-          <th style={{ backgroundColor: "#15acda" }}>Materie</th>
-          <th style={{ backgroundColor: "#15acda" }}>Note</th>
-          <th style={{ backgroundColor: "#15acda" }}>Media</th>
-          <th style={{ backgroundColor: "#15acda" }}>Absente</th>
-          <th style={{ backgroundColor: "#15acda" }}></th>
+        <tr style={{ backgroundColor: "#15acda" }}>
+          <th>Nr. Crt</th>
+          <th>Materie</th>
+          <th>Note</th>
+          <th>Media</th>
+          <th>Absente</th>
+          <th></th>
         </tr>
-        {StudentGrades.map((grade, index) => {
+        {student?.materii.map((materie: any, index: number) => {
           let sumaNote = 0;
-          grade.Note.map((nota) => (sumaNote = sumaNote + nota.nota));
-          const media = (sumaNote / grade.Note.length).toFixed(2);
+          materie.note.map((nota: any) => (sumaNote = sumaNote + nota.valoare));
+          const media = (sumaNote / materie.note.length).toFixed(2);
           return (
             <tr>
               <td>{index}</td>
-              <td>{grade.Materie}</td>
+              <td>{materie.nume}</td>
               <td>
-                {grade.Note.map((nota) => (
+                {materie.note.map((nota: any) => (
                   <div>
-                    {nota.nota} - {nota.data}
+                    {nota.valoare} - {nota.data}
                   </div>
                 ))}
               </td>
               <td>{media}</td>
               <td>
-                {grade.Absente.map((absenta) => (
+                {materie.absente.map((absenta: any) => (
                   <div>{absenta}</div>
                 ))}
               </td>
@@ -103,15 +74,27 @@ const StudentScreen = () => {
                     alignItems: "space-between",
                   }}
                 >
-                  <div className={styles.mainButton}>ADAUGA NOTA</div>
-                  <div className={styles.mainButton}>ADAUGA ABSENTA</div>
+                  <div
+                    className={styles.mainButton}
+                    onClick={() => setModalVisible(true)}
+                  >
+                    ADAUGA NOTA
+                  </div>
+                  <div
+                    className={styles.mainButton}
+                    onClick={() => setModalVisible(true)}
+                  >
+                    ADAUGA ABSENTA
+                  </div>
                 </div>
               </td>
             </tr>
           );
         })}
       </table>
-      <AddModal Tip={"nota"} Materie={"materie"} isNota={true} />
+      {modalVisible ? (
+        <AddModal Tip={"nota"} Materie={"materie"} isNota={true} />
+      ) : null}
     </div>
   );
 };
