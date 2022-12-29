@@ -18,7 +18,6 @@ export const getStudents = async () => {
   const studentsArray = await getDocs(currentCollection);
   let studentsArrayData: any = [];
   studentsArray.forEach((student) => studentsArrayData.push(student.data()))
-  console.log(studentsArrayData, "students");
   return studentsArrayData;
 };
 
@@ -26,7 +25,6 @@ export const getStudentById = async (id: string) => {
     const currentCollection = doc(base, "students", id);
     const studentsArray = await getDoc(currentCollection);
     const studentsArrayData = studentsArray.data();
-    console.log(studentsArrayData, "students");
     return studentsArrayData;
   };
 
@@ -37,6 +35,6 @@ export const setElev = async () => {
   const docId = await setDoc(
     doc(base, "students", "011"),
     studentsArrayData
-  ).then((response) => console.log(response));
+  ).then((response) => response);
   return docId;
 };

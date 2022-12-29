@@ -20,8 +20,7 @@ const StudentScreen = () => {
   >();
   const location = useLocation();
   const documentId = location.search.substring(1);
-  console.log(documentId);
-
+  
   const getStudentData = async () => {
     const studentData = await getStudentById(documentId);
     if (studentData) setStudent(studentData);
