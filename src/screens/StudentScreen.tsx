@@ -15,12 +15,15 @@ interface StudentsProps {
 
 const StudentScreen = () => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [selectedClass, setSelectedClass] = useState<string>("");
+  const [isNota, setIsNota] = useState<boolean>(false);
+  const [type, setType] = useState<string>("");
   const [student, setStudent] = useState<
     StudentsProps | DocumentData | undefined
   >();
   const location = useLocation();
   const documentId = location.search.substring(1);
-  
+
   const getStudentData = async () => {
     const studentData = await getStudentById(documentId);
     if (studentData) setStudent(studentData);
@@ -76,13 +79,23 @@ const StudentScreen = () => {
                 >
                   <div
                     className={styles.mainButton}
-                    onClick={() => setModalVisible(true)}
+                    onClick={() => {
+                      setSelectedClass(materie.nume);
+                      setType("Nota");
+                      setIsNota(true);
+                      setModalVisible(true);
+                    }}
                   >
                     ADAUGA NOTA
                   </div>
                   <div
                     className={styles.mainButton}
-                    onClick={() => setModalVisible(true)}
+                    onClick={() => {
+                      setSelectedClass(materie.nume);
+                      setType("Absenta");
+                      setIsNota(false);
+                      setModalVisible(true);
+                    }}
                   >
                     ADAUGA ABSENTA
                   </div>
@@ -93,7 +106,7 @@ const StudentScreen = () => {
         })}
       </table>
       {modalVisible ? (
-        <AddModal Tip={"nota"} Materie={"materie"} isNota={true} />
+        <AddModal Tip={type} Materie={selectedClass} isNota={isNota} setModalVisible={setModalVisible}/>
       ) : null}
     </div>
   );
