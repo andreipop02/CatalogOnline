@@ -2,33 +2,6 @@ import React, { useEffect, useState } from "react";
 import "../App.module.scss";
 import { getStudents, setElev } from "../functions/firebase";
 
-const StudentsList = [
-  {
-    nume: "Pop",
-    prenume: "Andrei",
-    CNP: "5011202245025",
-    NrMatricol: "213",
-  },
-  {
-    nume: "Racz",
-    prenume: "Catalin",
-    CNP: "5011202245025",
-    NrMatricol: "526",
-  },
-  {
-    nume: "Pop",
-    prenume: "Larisa",
-    CNP: "5011202245025",
-    NrMatricol: "765",
-  },
-  {
-    nume: "Trif",
-    prenume: "Patricia",
-    CNP: "5011202245025",
-    NrMatricol: "236",
-  },
-];
-
 interface StudentsProps {
   nume: string;
   prenume: string;

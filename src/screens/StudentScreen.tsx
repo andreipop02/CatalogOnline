@@ -5,6 +5,7 @@ import "../App.module.scss";
 import styles from "../App.module.scss";
 import AddModal from "../components/AddModal";
 import { getStudentById } from "../functions/firebase";
+
 interface StudentsProps {
   nume: string;
   prenume: string;
@@ -15,7 +16,7 @@ interface StudentsProps {
 
 const StudentScreen = () => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [selectedClass, setSelectedClass] = useState<string>("");
+  const [selectedClass, setSelectedClass] = useState<number>(0);
   const [isNota, setIsNota] = useState<boolean>(false);
   const [type, setType] = useState<string>("");
   const [student, setStudent] = useState<
@@ -80,7 +81,7 @@ const StudentScreen = () => {
                   <div
                     className={styles.mainButton}
                     onClick={() => {
-                      setSelectedClass(materie.nume);
+                      setSelectedClass(index);
                       setType("Nota");
                       setIsNota(true);
                       setModalVisible(true);
@@ -91,7 +92,7 @@ const StudentScreen = () => {
                   <div
                     className={styles.mainButton}
                     onClick={() => {
-                      setSelectedClass(materie.nume);
+                      setSelectedClass(index);
                       setType("Absenta");
                       setIsNota(false);
                       setModalVisible(true);
@@ -106,7 +107,13 @@ const StudentScreen = () => {
         })}
       </table>
       {modalVisible ? (
-        <AddModal Tip={type} Materie={selectedClass} isNota={isNota} setModalVisible={setModalVisible}/>
+        <AddModal
+          student={student}
+          Tip={type}
+          Materie={selectedClass}
+          isNota={isNota}
+          setModalVisible={setModalVisible}
+        />
       ) : null}
     </div>
   );
