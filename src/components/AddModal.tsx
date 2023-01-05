@@ -75,7 +75,6 @@ const AddModal = ({
             filterDate={(date: any) =>
               date.getDay() !== 6 && date.getDay() !== 0
             }
-            dateFormat="Pp"
           />
         </div>
         <div className={styles.modalButtonsContainer}>
