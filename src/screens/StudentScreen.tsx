@@ -4,20 +4,26 @@ import { useLocation } from "react-router-dom";
 import "../App.module.scss";
 import styles from "../App.module.scss";
 import AddModal from "../components/AddModal";
+import DeleteModal from "../components/DeleteModal";
+import FeedbackModule from "../components/FeedbackModule";
 import { getStudentById } from "../functions/firebase";
+
 interface StudentsProps {
   nume: string;
   prenume: string;
   CNP: string;
   nrMatricol: string;
   materii: object[];
+  clasa: number;
 }
 
 const StudentScreen = () => {
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [selectedClass, setSelectedClass] = useState<string>("");
+  const [addModalVisible, setAddModalVisible] = useState<boolean>(false);
+  const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
+  const [selectedClass, setSelectedClass] = useState<number>(0);
   const [isNota, setIsNota] = useState<boolean>(false);
   const [type, setType] = useState<string>("");
+  const [refresh, setRefresh] = useState<boolean>(false);
   const [student, setStudent] = useState<
     StudentsProps | DocumentData | undefined
   >();
@@ -31,7 +37,7 @@ const StudentScreen = () => {
 
   useEffect(() => {
     getStudentData();
-  }, []);
+  }, [refresh, addModalVisible]);
 
   return (
     <div>
@@ -69,35 +75,50 @@ const StudentScreen = () => {
                 ))}
               </td>
               <td>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    flexDirection: "column",
-                    alignItems: "space-between",
-                  }}
-                >
+                <div className={styles.buttonsContainer}>
                   <div
-                    className={styles.mainButton}
+                    className={styles.mainButtonAdd}
                     onClick={() => {
-                      setSelectedClass(materie.nume);
+                      setSelectedClass(index);
                       setType("Nota");
                       setIsNota(true);
-                      setModalVisible(true);
+                      setAddModalVisible(true);
                     }}
                   >
                     ADAUGA NOTA
                   </div>
                   <div
-                    className={styles.mainButton}
+                    className={styles.mainButtonAdd}
                     onClick={() => {
-                      setSelectedClass(materie.nume);
+                      setSelectedClass(index);
                       setType("Absenta");
                       setIsNota(false);
-                      setModalVisible(true);
+                      setAddModalVisible(true);
                     }}
                   >
                     ADAUGA ABSENTA
+                  </div>
+                  <div
+                    className={styles.mainButtonDelete}
+                    onClick={() => {
+                      setSelectedClass(index);
+                      setType("Nota");
+                      setIsNota(true);
+                      setDeleteModalVisible(true);
+                    }}
+                  >
+                    STERGE NOTA
+                  </div>
+                  <div
+                    className={styles.mainButtonDelete}
+                    onClick={() => {
+                      setSelectedClass(index);
+                      setType("Absenta");
+                      setIsNota(false);
+                      setDeleteModalVisible(true);
+                    }}
+                  >
+                    STERGE ABSENTA
                   </div>
                 </div>
               </td>
@@ -105,9 +126,29 @@ const StudentScreen = () => {
           );
         })}
       </table>
-      {modalVisible ? (
-        <AddModal Tip={type} Materie={selectedClass} isNota={isNota} setModalVisible={setModalVisible}/>
+      {addModalVisible ? (
+        <AddModal
+          student={student}
+          Tip={type}
+          Materie={selectedClass}
+          isNota={isNota}
+          setModalVisible={setAddModalVisible}
+          setRefresh={setRefresh}
+          refresh={refresh}
+        />
       ) : null}
+      {deleteModalVisible ? (
+        <DeleteModal
+          student={student}
+          Tip={type}
+          Materie={selectedClass}
+          isNota={isNota}
+          setModalVisible={setDeleteModalVisible}
+          setRefresh={setRefresh}
+          refresh={refresh}
+        />
+      ) : null}
+      <FeedbackModule />
     </div>
   );
 };
