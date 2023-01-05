@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ReactDropdown from "react-dropdown";
 import "../App.module.scss";
-import {
-  getStudents,
-  getStudentsByClass,
-} from "../functions/firebase";
+import { getStudents, getStudentsByClass } from "../functions/firebase";
 import styles from "../App.module.scss";
 import FeedbackModule from "../components/FeedbackModule";
 
@@ -59,15 +56,7 @@ const MainScreen = () => {
         {students.map((student, index) => {
           return (
             <tr>
-              <td
-                style={{
-                  fontWeight: "bold",
-                  width: "150px",
-                  cursor: "pointer",
-                }}
-              >
-                {index + 1}
-              </td>
+              <td className={styles.firstColumnStyle}>{index + 1}</td>
               <td>{student.nume}</td>
               <td>{student.prenume}</td>
               <td>{student.CNP}</td>
@@ -76,12 +65,7 @@ const MainScreen = () => {
                 onClick={() =>
                   (window.location.href = `/elev?${student.nrMatricol}`)
                 }
-                style={{
-                  backgroundColor: "red",
-                  fontWeight: "bold",
-                  width: "150px",
-                  cursor: "pointer",
-                }}
+                className={styles.studentPageButton}
               >
                 PAGINA ELEVULUI
               </td>

@@ -213,3 +213,18 @@ td {
   top: 50px;
   transform: translate(-50%, 0);
 }
+
+.studentPageButton {
+  background-color: red;
+  font-weight: bold;
+  width: 150px;
+  cursor: pointer;
+}
+
+.firstColumnStyle {
+  font-weight: bold;
+  width: 50px !important;
+  .td{
+    width: 50px !important;
+  }
+}
