@@ -37,41 +37,44 @@ const MainScreen = () => {
   }, [clasa]);
   return (
     <div className="App">
+      <div>Selecteaza CLASA</div>
+      <ReactDropdown
+        options={["5", "6", "7", "8"]}
+        className={styles.selectGrade}
+        onChange={(grade) => setClasa(parseInt(grade.value))}
+      />
       <table style={{ width: "100%" }}>
-        <div>Selecteaza CLASA</div>
-        <ReactDropdown
-          options={["5", "6", "7", "8"]}
-          className={styles.selectGrade}
-          onChange={(grade) => setClasa(parseInt(grade.value))}
-        />
-
-        <tr style={{ backgroundColor: "#15acda" }}>
-          <th>Nr. Crt</th>
-          <th>Nume</th>
-          <th>Prenume</th>
-          <th>CNP</th>
-          <th>Nr. Matricol</th>
-          <th></th>
-        </tr>
-        {students.map((student, index) => {
-          return (
-            <tr>
-              <td className={styles.firstColumnStyle}>{index + 1}</td>
-              <td>{student.nume}</td>
-              <td>{student.prenume}</td>
-              <td>{student.CNP}</td>
-              <td>{student.nrMatricol}</td>
-              <td
-                onClick={() =>
-                  (window.location.href = `/elev?${student.nrMatricol}`)
-                }
-                className={styles.studentPageButton}
-              >
-                PAGINA ELEVULUI
-              </td>
-            </tr>
-          );
-        })}
+        <thead>
+          <tr style={{ backgroundColor: "#15acda" }}>
+            <th>Nr. Crt</th>
+            <th>Nume</th>
+            <th>Prenume</th>
+            <th>CNP</th>
+            <th>Nr. Matricol</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {students.map((student, index) => {
+            return (
+              <tr>
+                <td className={styles.firstColumnStyle}>{index + 1}</td>
+                <td>{student.nume}</td>
+                <td>{student.prenume}</td>
+                <td>{student.CNP}</td>
+                <td>{student.nrMatricol}</td>
+                <td
+                  onClick={() =>
+                    (window.location.href = `/elev?${student.nrMatricol}`)
+                  }
+                  className={styles.studentPageButton}
+                >
+                  PAGINA ELEVULUI
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
       </table>
       <FeedbackModule />
     </div>

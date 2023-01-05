@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styles from "../App.module.scss";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import ReactDropdown, { Option } from "react-dropdown";
+import ReactDropdown from "react-dropdown";
 import "react-dropdown/style.css";
 import { setAbsenta, setNota } from "../functions/firebase";
 import { DocumentData } from "firebase/firestore";
