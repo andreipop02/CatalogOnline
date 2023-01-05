@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import styles from "../App.module.scss";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import ReactDropdown, { Option } from "react-dropdown";
 import "react-dropdown/style.css";
-import { setAbsenta, setNota } from "../functions/firebase";
+import {
+  stergeAbsenta,
+  stergeNota,
+} from "../functions/firebase";
 import { DocumentData } from "firebase/firestore";
 
 interface StudentsProps {
@@ -24,7 +26,7 @@ interface Props {
   refresh: boolean;
 }
 
-const AddModal = ({
+const DeleteModal = ({
   Tip,
   Materie,
   isNota,
@@ -34,7 +36,6 @@ const AddModal = ({
   refresh,
 }: Props) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>();
-  const [selectedGrade, setSelectedGrade] = useState<number>(1);
 
   const convert = (selected: Date | null) => {
     if (selected) {
@@ -52,21 +53,11 @@ const AddModal = ({
   return (
     <div className={styles.mainModalContainer}>
       <div className={styles.addModalContainer}>
-        <div className={styles.titleTextModal}>Adauga {Tip}</div>
+        <div className={styles.titleTextModal}>Sterge {Tip}</div>
         <div className={styles.titleTextModal}>
           Materie: {student?.materii[Materie].nume}
         </div>
         <div className={styles.dateAndGradeContainer}>
-          {isNota ? (
-            <div>
-              <div style={{ left: 0 }}>ALEGE NOTA</div>
-              <ReactDropdown
-                options={["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]}
-                className={styles.selectGrade}
-                onChange={(grade) => setSelectedGrade(parseInt(grade.value))}
-              />
-            </div>
-          ) : null}
           <div style={{ left: 0 }}>ALEGE DATA</div>
           <DatePicker
             selected={selectedDate}
@@ -83,21 +74,20 @@ const AddModal = ({
             className={styles.addButton}
             onClick={async () => {
               isNota
-                ? await setNota(
+                ? await stergeNota(
                     student?.nrMatricol,
                     Materie,
-                    selectedGrade,
                     //@ts-ignore
                     convert(selectedDate)
                   )
                     .then(() => {
                       setRefresh(!refresh);
-                      alert("Nota adaugata cu succes!");
+                      alert("Nota stearsa cu succes!");
                     })
                     .catch((e) => {
                       alert(`A aparut o eroare! (${e})`);
                     })
-                : await setAbsenta(
+                : await stergeAbsenta(
                     student?.nrMatricol,
                     Materie,
                     //@ts-ignore
@@ -105,14 +95,14 @@ const AddModal = ({
                   )
                     .then(() => {
                       setRefresh(!refresh);
-                      alert("Absenta adaugata cu succes!");
+                      alert("Absenta stearsa cu succes!");
                     })
                     .catch((e) => {
                       alert(`A aparut o eroare! (${e})`);
                     });
             }}
           >
-            ADAUGA
+            STERGE
           </div>
           <div
             className={styles.addButton}
@@ -127,4 +117,4 @@ const AddModal = ({
   );
 };
 
-export default AddModal;
+export default DeleteModal;
